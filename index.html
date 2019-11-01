@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/3.4.0/fabric.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet"> 
+
+<style>
+
+body {
+	background-color: #F8F8F8;
+	margin-top:  50px;
+	font-family: 'Montserrat', sans-serif;
+}
+
+.row {
+	border:  1px solid #DDD;
+}
+
+#c {
+	
+	background-color:  white;
+}
+
+.panel {
+	display:  none;
+}
+
+.form-control{
+	margin-bottom:  15px;
+}
+
+.spacer {
+	height:  15px;
+}
+
+.col-md-3 {
+	background-color: #F4F8FB;
+	border-left:  1px solid #DDD;
+}
+
+.side-panel {
+	padding:  20px;
+}
+
+h1 {
+	font-size:  20px;
+	margin-bottom:  15px;
+}
+
+.btn {
+	width: 100%;
+}
+
+@media only screen and (max-width : 750px) {
+
+}
+</style>
+
+<link href="https://fonts.googleapis.com/css?family=Staatliches|Montserrat:300,400,500,600&display=swap" rel="stylesheet"> 
+
+
+
+</head>
+<body>
+
+
+<div class="container">
+
+<div class="row no-gutters">
+
+<div class="col-md-9">
+<canvas id="c" width="831" height="500"></canvas>
+<img id="i" src="img/placeholder-sm.jpg" style="display: none;" />
+</div>
+
+<div class="col-md-3">
+	
+	<div class="side-panel">
+		<div id="image-panel" class="panel"><h1>Image</h1>
+		
+		<div class="spacer"></div>
+		<button class="btn btn-outline-danger remove">Remove</button>
+		
+		
+		</div>
+	<div id="shape-panel" class="panel">
+	<h1>Shape</h1>
+	
+	<div>
+	<input type="text" id="shape-color" class="color" />
+	</div>
+	
+	<div class="spacer"></div>
+	<button class="btn btn-outline-danger remove">Remove</button>
+	
+	</div>
+	<div id="text-panel" class="panel">
+		
+		
+		<h1>Text</h1>
+	
+	<textarea name="text" id="text" class="form-control"></textarea>
+	
+	 <select id="select_fontfamily" style="width: 100%;"></select>
+		
+		<div class="spacer"></div>	
+		
+		<div>
+		<input type="text" id="text-color" class="color" />	
+		</div>
+	
+	<div class="spacer"></div>
+	<button class="btn btn-outline-danger remove">Remove</button>
+	
+	</div>
+	
+	</div>
+	
+</div>
+
+
+</div>
+
+</div>
+
+
+
+
+<!-- Font Picker -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+<script src="assets/fontpicker/fonts.js"></script>
+<link rel="stylesheet" href="assets/fontpicker/fonts.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/css/select2.min.css">
+	
+<!-- Color Picker -->	
+<script src='assets/spectrum/spectrum.js'></script>
+<link rel='stylesheet' href='assets/spectrum/spectrum.css' />	
+
+
+<script>
+
+// create a wrapper around native canvas element (with id="c")
+var canvas = new fabric.Canvas('c');
+
+// create a rectangle object
+var rect = new fabric.Rect({
+  left: 50,
+  top: 100,
+  fill: '#EEEEEE',
+  width: 300,
+  height: 150
+});
+
+// "add" rectangle onto canvas
+canvas.add(rect);
+
+
+var imgElement = document.getElementById('i');
+var imgInstance = new fabric.Image(imgElement, {
+  left: 50,
+  top: 250,
+  angle: 0,
+  scaleX: 0.3,
+  scaleY: 0.3,
+  opacity: 0.85
+});
+canvas.add(imgInstance);
+
+
+var text = new fabric.Text('hello world', { left: 50, top: 50, fontFamily: 'Staatliches' });
+canvas.add(text);
+
+
+
+
+function onObjectSelected(o){
+    //activeObject = canvas.getActiveObject()
+    var obj = o.target;
+
+	var type = (canvas.getActiveObject().type ? canvas.getActiveObject().type : "");
+	
+	console.log(type);
+	console.log(obj);
+	
+	$('.panel').hide();
+
+    if(type=='text'){
+       //display text logic
+	   
+	   $('#text').val(obj.text);
+	   $('#text-color').val(obj.fill);
+	   
+	   $('#text-panel').show();
+    }
+    else if(type=='image'){
+      //display image
+	  $('#image-panel').show();
+    }
+    else if(type=='rect'){
+      //display shape logic
+	  $('#shape-color').val(obj.fill);
+	  
+	  
+	  $('#shape-panel').show();
+    }
+}
+
+canvas.on('selection:created', onObjectSelected);
+canvas.on('selection:updated', onObjectSelected);	
+
+$("#text").on('change keyup paste', function() {
+	
+var object = canvas.getActiveObject();
+
+	
+object.set('text', $('#text').val());
+canvas.renderAll();
+});
+
+
+$(document).ready(function() {
+     
+		$( "#select_fontfamily" ).higooglefonts({			
+			selectedCallback:function(e){
+				console.log(e);
+				
+				
+		    },
+			loadedCallback:function(font){
+				console.log(font);
+				/*/////// This is where you should apply font.///////
+				/////////////////////////////////////////////////////*/				
+				// $("#paragraph").css("font-family", font);
+				
+				var object = canvas.getActiveObject();
+				
+				object.fontFamily = font;
+				canvas.renderAll();
+		    }			
+		}); 
+		
+		
+		$(".color").spectrum({
+			change: function(color) {
+				
+			
+				
+			    var colr = color.toHexString(); // #ff0000
+				var object = canvas.getActiveObject();
+				
+				object.set({fill: colr})
+				canvas.renderAll();
+			}
+		});
+	
+	
+	$('.remove').on('click', function(){
+		
+		canvas.remove(canvas.getActiveObject());
+		
+		$('.panel').fadeOut();
+		
+		});
+
+});
+
+
+</script>
+
+
+
+</body>
+</html>
