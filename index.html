@@ -17,12 +17,12 @@
 
 body {
 	background-color: #F8F8F8;
-	margin-top:  50px;
+	margin-top:  80px;
 	font-family: 'Montserrat', sans-serif;
 }
 
 .row {
-	border:  1px solid #DDD;
+	border:  1px solid black;
 }
 
 #c {
@@ -44,20 +44,54 @@ body {
 
 .col-md-3 {
 	background-color: #F4F8FB;
-	border-left:  1px solid #DDD;
+	border-left:  1px solid black;
 }
 
-.side-panel {
+.pad {
 	padding:  20px;
 }
 
 h1 {
-	font-size:  20px;
+	font-size:  16px;
 	margin-bottom:  15px;
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
 }
 
 .btn {
 	width: 100%;
+}
+
+.btn-group button {
+	border-top: 0;
+}
+
+.btn-group button:first-child {
+	border-radius:  0;
+	border-left:  0;
+}
+
+.btn-group button:last-child {
+	border-radius:  0;
+	border-right: 0;
+}
+
+textarea {
+	min-height:  240px;
+}
+
+.sp-replacer.sp-light, .sp-container.sp-light {
+	border:  1px solid black;
+	
+}
+
+.sp-replacer.sp-light {
+	background-color: transparent;
+}
+
+
+.sp-replacer.sp-light:hover, .sp-replacer.sp-light:active {
+border:  1px solid black;
 }
 
 @media only screen and (max-width : 750px) {
@@ -67,6 +101,7 @@ h1 {
 
 <link href="https://fonts.googleapis.com/css?family=Staatliches|Montserrat:300,400,500,600&display=swap" rel="stylesheet"> 
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> 
 
 
 </head>
@@ -85,45 +120,77 @@ h1 {
 <div class="col-md-3">
 	
 	<div class="side-panel">
-		<div id="image-panel" class="panel"><h1>Image</h1>
 		
-		<div class="spacer"></div>
-		<button class="btn btn-outline-danger remove">Remove</button>
 		
+		
+		<div id="insertbar">
+			
+			<div class="btn-group" style="width: 100%;">
+			  <button type="button" class="btn btn-outline-dark" id="insert-image"><i class="fa fa-image"></i></button>
+			  <button type="button" class="btn btn-outline-dark" id="insert-rectangle"><i class="fa fa-square-o"></i></button>
+			  <button type="button" class="btn btn-outline-dark" id="insert-circle"><i class="fa fa-circle-thin"></i></button>
+			  <button type="button" class="btn btn-outline-dark" id="insert-text"><i class="fa fa-font"></i></button>
+			</div>
+			
+			
+			
+		</div>
+		
+		
+		<div id="image-panel" class="panel">
+			<div class="pad">
+			<h1>Edit Image</h1>
+			
+				
+					<div class="spacer"></div>
+					<button class="btn btn-outline-danger remove">Remove</button>
+				</div>
 		
 		</div>
+			
 	<div id="shape-panel" class="panel">
-	<h1>Shape</h1>
-	
-	<div>
-	<input type="text" id="shape-color" class="color" />
-	</div>
-	
-	<div class="spacer"></div>
-	<button class="btn btn-outline-danger remove">Remove</button>
-	
+			
+			<div class="pad">
+			<h1>Edit Shape</h1>
+			
+			
+				
+				<div>
+				<input type="text" id="shape-color" class="color" />
+				</div>
+				
+				<div class="spacer"></div>
+				<button class="btn btn-outline-danger remove">Remove</button>
+			
+			</div>
+			
 	</div>
 	<div id="text-panel" class="panel">
 		
+		<div class="pad">
+		<h1>Edit Text</h1>
 		
-		<h1>Text</h1>
 	
-	<textarea name="text" id="text" class="form-control"></textarea>
-	
-	 <select id="select_fontfamily" style="width: 100%;"></select>
-		
-		<div class="spacer"></div>	
-		
-		<div>
-		<input type="text" id="text-color" class="color" />	
+			<textarea name="text" id="text" class="form-control"></textarea>
+			
+			 <select id="select_fontfamily" style="width: 100%;"></select>
+				
+				<div class="spacer"></div>	
+				
+				<div>
+				<input type="text" id="text-color" class="color" />	
+				</div>
+			
+			<div class="spacer"></div>
+			<button class="btn btn-outline-danger remove">Remove</button>
+			
 		</div>
-	
-	<div class="spacer"></div>
-	<button class="btn btn-outline-danger remove">Remove</button>
-	
 	</div>
 	
 	</div>
+	
+	
+	<input type="file" id="file" style="display: none;">
 	
 </div>
 
@@ -152,19 +219,9 @@ h1 {
 // create a wrapper around native canvas element (with id="c")
 var canvas = new fabric.Canvas('c');
 
-// create a rectangle object
-var rect = new fabric.Rect({
-  left: 50,
-  top: 100,
-  fill: '#EEEEEE',
-  width: 300,
-  height: 150
-});
-
-// "add" rectangle onto canvas
-canvas.add(rect);
 
 
+/*
 var imgElement = document.getElementById('i');
 var imgInstance = new fabric.Image(imgElement, {
   left: 50,
@@ -175,10 +232,8 @@ var imgInstance = new fabric.Image(imgElement, {
   opacity: 0.85
 });
 canvas.add(imgInstance);
+*/
 
-
-var text = new fabric.Text('hello world', { left: 50, top: 50, fontFamily: 'Staatliches' });
-canvas.add(text);
 
 
 
@@ -206,7 +261,7 @@ function onObjectSelected(o){
       //display image
 	  $('#image-panel').show();
     }
-    else if(type=='rect'){
+    else if(type=='rect' || type=='circle'){
       //display shape logic
 	  $('#shape-color').val(obj.fill);
 	  
@@ -229,6 +284,56 @@ canvas.renderAll();
 
 
 $(document).ready(function() {
+	 
+	  $('#insert-image').on('click', function(){
+	  	
+	  	$('.pane').fadeOut();
+	  	
+	  	$('#file').click();
+	  	
+	  });
+	 
+	 $('#insert-rectangle').on('click', function(){
+	 
+	 	$('.pane').fadeOut();
+	 
+	 	// create a rectangle object
+		 var rect = new fabric.Rect({
+		   left: 50,
+		   top: 50,
+		   fill: '#EEEEEE',
+		   width: 100,
+		   height: 100
+		 });
+		 
+		 // "add" rectangle onto canvas
+		 canvas.add(rect);
+	 
+	 });
+	 
+	 
+	 $('#insert-circle').on('click', function(){
+	 
+	 	$('.pane').fadeOut();
+	 
+	 	// create a rectangle object
+	 	 var circle = new fabric.Circle({radius: 50, fill: '#EEEEEE', left: 200, top: 50 });
+	 	 
+	 	 // "add" rectangle onto canvas
+	 	 canvas.add(circle);
+	 
+	 });
+	 
+	 
+	 $('#insert-text').on('click', function(){
+	 
+		 $('.pane').fadeOut();
+		 
+		 var text = new fabric.Text('Lorem ipsum', { left: 350, top: 50, fontFamily: 'Staatliches' });
+		 canvas.add(text);
+	 });
+	 
+	 
      
 		$( "#select_fontfamily" ).higooglefonts({			
 			selectedCallback:function(e){
@@ -270,7 +375,22 @@ $(document).ready(function() {
 		
 		$('.panel').fadeOut();
 		
-		});
+	});
+	
+	document.getElementById('file').addEventListener("change", function (e) {
+	  var file = e.target.files[0];
+	  var reader = new FileReader();
+	  reader.onload = function (f) {
+	    var data = f.target.result;                    
+	    fabric.Image.fromURL(data, function (img) {
+	      var oImg = img.set({left: 50, top: 200, angle: 0}).scale(0.3);
+	      canvas.add(oImg).renderAll();
+	      var a = canvas.setActiveObject(oImg);
+	      var dataURL = canvas.toDataURL({format: 'png', quality: 0.8});
+	    });
+	  };
+	  reader.readAsDataURL(file);
+	});
 
 });
 
