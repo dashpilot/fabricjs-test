@@ -52,7 +52,7 @@ body {
 }
 
 .pad {
-	padding:  20px;
+	padding:  15px;
 }
 
 h1 {
@@ -64,6 +64,7 @@ h1 {
 
 .btn {
 	width: 100%;
+	font-weight:  300;
 }
 
 .btn-group button {
@@ -80,8 +81,10 @@ h1 {
 	border-right: 0;
 }
 
-textarea {
-	min-height:  240px;
+textarea.form-control {
+	min-height:  150px;
+	border:  1px solid black;
+	resize: none;
 }
 
 .sp-replacer.sp-light, .sp-container.sp-light {
@@ -96,6 +99,37 @@ textarea {
 
 .sp-replacer.sp-light:hover, .sp-replacer.sp-light:active {
 border:  1px solid black;
+}
+
+.select2-selection__placeholder {
+	font-weight:  300;
+	font-size:  14px;
+	
+}
+
+
+.select2-container--classic .select2-selection--single {
+	border:  1px solid black !important;
+}
+
+.select2-container--classic .select2-selection--single .select2-selection__arrow {
+	border-left: 1px solid black !important;
+}
+
+
+#save-btn {
+	margin:  15px;
+	position:  absolute;
+	bottom:  0px;
+	width:  210px;
+	display:  block;
+	font-weight: 300;
+	padding-bottom:  10px;
+}
+
+#save-btn:hover {
+	color:  white;
+	cursor:  pointer;
 }
 
 @media only screen and (max-width : 750px) {
@@ -147,7 +181,7 @@ border:  1px solid black;
 			
 				
 					<div class="spacer"></div>
-					<button class="btn btn-outline-danger remove">Remove</button>
+					<button class="btn btn-outline-dark remove">Remove</button>
 				</div>
 		
 		</div>
@@ -164,7 +198,7 @@ border:  1px solid black;
 				</div>
 				
 				<div class="spacer"></div>
-				<button class="btn btn-outline-danger remove">Remove</button>
+				<button class="btn btn-outline-dark remove">Remove</button>
 			
 			</div>
 			
@@ -186,7 +220,7 @@ border:  1px solid black;
 				</div>
 			
 			<div class="spacer"></div>
-			<button class="btn btn-outline-danger remove">Remove</button>
+			<button class="btn btn-outline-dark remove">Remove</button>
 			
 		</div>
 	</div>
@@ -221,7 +255,11 @@ border:  1px solid black;
 <script>
 
 // create a wrapper around native canvas element (with id="c")
-var canvas = new fabric.Canvas('c');
+var canvas = new fabric.Canvas('c', {
+	preserveObjectStacking: false
+	
+	
+	});
 
 
 
@@ -395,6 +433,20 @@ $(document).ready(function() {
 	  };
 	  reader.readAsDataURL(file);
 	});
+	
+	
+	var link = document.createElement('a');
+	    link.innerHTML = 'Download Image';
+		link.className = "btn btn-outline-dark";
+		link.id = "save-btn";
+	link.addEventListener('click', function(ev) {
+	    link.href = canvas.toDataURL();
+	    link.download = "image.png";
+		
+	}, false);
+	// document.body.appendChild(link);
+	
+	$('.side-panel').append(link);
 
 });
 
