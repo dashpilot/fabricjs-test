@@ -121,7 +121,7 @@ border:  1px solid black;
 	margin:  15px;
 	position:  absolute;
 	bottom:  0px;
-	width:  210px;
+	width:  88%;
 	display:  block;
 	font-weight: 300;
 	padding-bottom:  10px;
@@ -189,7 +189,7 @@ border:  1px solid black;
 	<div id="shape-panel" class="panel">
 			
 			<div class="pad">
-			<h1>Edit Shape</h1>
+				<h1>Edit <span id="shape-type">Shape</span></h1>
 			
 			
 				
@@ -209,7 +209,7 @@ border:  1px solid black;
 		<h1>Edit Text</h1>
 		
 	
-			<textarea name="text" id="text" class="form-control"></textarea>
+			<!-- <textarea name="text" id="text" class="form-control"></textarea>-->
 			
 			 <select id="select_fontfamily" style="width: 100%;"></select>
 				
@@ -291,10 +291,10 @@ function onObjectSelected(o){
 	
 	$('.panel').hide();
 
-    if(type=='text'){
+    if(type=='i-text'){
        //display text logic
 	   
-	   $('#text').val(obj.text);
+	   //$('#text').val(obj.text);
 	   $('#text-color').val(obj.fill);
 	   
 	   $('#text-panel').show();
@@ -308,6 +308,16 @@ function onObjectSelected(o){
 	  $('#shape-color').val(obj.fill);
 	  
 	  
+	  if(type=='rect'){
+	  	var shape_type = "Rectangle";
+	  }
+	  
+	  if(type=='circle'){
+	  	var shape_type = "Circle";
+	  }
+	  
+	  $('#shape-type').text(shape_type);
+	  
 	  $('#shape-panel').show();
     }
 }
@@ -315,6 +325,8 @@ function onObjectSelected(o){
 canvas.on('selection:created', onObjectSelected);
 canvas.on('selection:updated', onObjectSelected);	
 
+
+/*
 $("#text").on('change keyup paste', function() {
 	
 var object = canvas.getActiveObject();
@@ -323,6 +335,7 @@ var object = canvas.getActiveObject();
 object.set('text', $('#text').val());
 canvas.renderAll();
 });
+*/
 
 
 $(document).ready(function() {
@@ -371,7 +384,7 @@ $(document).ready(function() {
 	 
 		 $('.pane').fadeOut();
 		 
-		 var text = new fabric.Text('Lorem ipsum', { left: 350, top: 50, fontFamily: 'Staatliches' });
+		 var text = new fabric.IText('Lorem ipsum', { left: 350, top: 50, fontFamily: 'Staatliches' });
 		 canvas.add(text);
 	 });
 	 
